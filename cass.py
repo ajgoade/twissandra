@@ -3,8 +3,14 @@ from uuid import uuid1, UUID
 import random
 
 from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
 
-cluster = Cluster(['127.0.0.1'])
+#Change secure connect bundle to the bundle you upload to the base directory
+cloud_config = {'secure_connect_bundle': './AJG-secure-connect-killrvideo.zip'}
+auth_provider = PlainTextAuthProvider('killrvideo', 'datastax')
+cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
+#cluster = Cluster(['127.0.0.1'])
+
 session = cluster.connect('twissandra')
 
 # Prepared statements, reuse as much as possible by binding new values
