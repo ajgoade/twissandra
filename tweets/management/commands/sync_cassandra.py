@@ -9,28 +9,29 @@ class Command(NoArgsCommand):
         auth_provider = PlainTextAuthProvider('killrvideo', 'datastax')
         cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
         #cluster = Cluster(['127.0.0.1'])
-        session = cluster.connect()
+        session = cluster.connect('twissandra')
 
-        rows = session.execute(
-            "SELECT * FROM system.schema_keyspaces WHERE keyspace_name='twissandra'")
+        #Assume keyspace is  created
+        #rows = session.execute(
+        #    "SELECT * FROM system.schema_keyspaces WHERE keyspace_name='twissandra'")
 
-        if rows:
-            msg = ' It looks like you already have a twissandra keyspace.\nDo you '
-            msg += 'want to delete it and recreate it? All current data will '
-            msg += 'be deleted! (y/n): '
-            resp = raw_input(msg)
-            if not resp or resp[0] != 'y':
-                print("Ok, then we're done here.")
-                return
-            session.execute("DROP KEYSPACE twissandra")
+        #if rows:
+        #    msg = ' It looks like you already have a twissandra keyspace.\nDo you '
+        #    msg += 'want to delete it and recreate it? All current data will '
+        #    msg += 'be deleted! (y/n): '
+        #    resp = raw_input(msg)
+        #    if not resp or resp[0] != 'y':
+        #        print("Ok, then we're done here.")
+        #        return
+        #    session.execute("DROP KEYSPACE twissandra")
 
-        session.execute("""
-            CREATE KEYSPACE twissandra
-            WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}
-            """)
+        #session.execute("""
+        #    CREATE KEYSPACE twissandra
+        #    WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}
+        #    """)
 
         # create tables
-        session.set_keyspace("twissandra")
+        #session.set_keyspace("twissandra")
 
         session.execute("""
             CREATE TABLE users (
