@@ -82,4 +82,4 @@ class Command(NoArgsCommand):
             ) WITH CLUSTERING ORDER BY (time DESC)
             """)
 
-        print 'All done!'
+        print('All done!')
