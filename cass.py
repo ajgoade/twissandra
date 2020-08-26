@@ -4,6 +4,7 @@ import random
 
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
+import cassandra.util
 
 #Change secure connect bundle to the bundle you upload to the base directory
 cloud_config = {'secure_connect_bundle': './your-secure-connect.zip'}
@@ -316,7 +317,8 @@ def save_tweet(tweet_id, username, tweet, timestamp=None):
     if timestamp is None:
         now = uuid1()
     else:
-        now = datetime.utcnow()
+        #now = datetime.utcnow()
+        now = cassandra.util.uuid_from_time(timestamp)
         #now = _timestamp_to_uuid(timestamp)
 
     # Insert the tweet

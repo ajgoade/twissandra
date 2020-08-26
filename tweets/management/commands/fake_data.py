@@ -1,4 +1,5 @@
 import datetime
+#from datetime import datetime
 import loremipsum
 import random
 import string
@@ -17,6 +18,7 @@ class Command(BaseCommand):
             time.time() +
             datetime.timedelta(days=365.25 * 10).total_seconds() * 1e6)
         now = int(time.time() * 1e6)
+        #now = now = datetime.utcnow()
 
         num_users = int(args[0])
         max_tweets = int(args[1])
@@ -34,10 +36,10 @@ class Command(BaseCommand):
             for _ in range(num_tweets[i % max_tweets]):
                 cass.save_tweet(uuid.uuid1(), username, self.get_tweet(), timestamp=random.randint(creation_date, now))
 
-            print "created user"
+            print("created user")
 
     def get_tweet(self):
         return loremipsum.get_sentence()
 
     def get_random_string(self):
-        return ''.join(random.sample(string.letters, 10))
+        return ''.join(random.sample(string.ascii_letters, 10))
