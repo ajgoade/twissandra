@@ -6,8 +6,8 @@ from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 
 #Change secure connect bundle to the bundle you upload to the base directory
-cloud_config = {'secure_connect_bundle': './AJG-secure-connect-killrvideo.zip'}
-auth_provider = PlainTextAuthProvider('killrvideo', 'datastax')
+cloud_config = {'secure_connect_bundle': './your-secure-connect.zip'}
+auth_provider = PlainTextAuthProvider('username', 'password')
 cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
 #cluster = Cluster(['127.0.0.1'])
 
