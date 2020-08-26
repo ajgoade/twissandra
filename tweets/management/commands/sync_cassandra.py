@@ -4,7 +4,10 @@ from django.core.management.base import NoArgsCommand
 class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
-        cluster = Cluster(['127.0.0.1'])
+        cloud_config = {'secure_connect_bundle': './AJG-secure-connect-killrvideo.zip'}
+        auth_provider = PlainTextAuthProvider('killrvideo', 'datastax')
+        cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
+        #cluster = Cluster(['127.0.0.1'])
         session = cluster.connect()
 
         rows = session.execute(
@@ -16,7 +19,7 @@ class Command(NoArgsCommand):
             msg += 'be deleted! (y/n): '
             resp = raw_input(msg)
             if not resp or resp[0] != 'y':
-                print "Ok, then we're done here."
+                print("Ok, then we're done here.")
                 return
             session.execute("DROP KEYSPACE twissandra")
 
