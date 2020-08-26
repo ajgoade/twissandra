@@ -20,16 +20,17 @@ install the project:
 
 ### Check out the Twissandra source code
 
-    git clone git://github.com/twissandra/twissandra.git
+    git clone https://github.com/ajgoade/twissandra.git
 
 ### Install and configure Cassandra
 
-Follow the instructions for [installing and setting up Cassandra](http://wiki.apache.org/cassandra/GettingStarted).
-Note, Twissandra requires **at-least Cassandra 2.0** or later.
+**No need to do this since we will be using Astra.  Simply create a twissandra keyspace.**
 
-And then make sure Cassandra is running:
+Example of creating a keyspace:  CREATE KEYSPACE twissandra WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}""")
 
-    bin/cassandra -f
+Place the **Astra Secure Connection Bundle** into the root directory of the project (i.e. ./secure-connect-twissandra.zip)
+
+Also, **./cass.py** and **./tweets/management/commands/sync_cassandra.py** should be modified with your Astra credentials. 
 
 ### Create a virtual Python environment with Twissandra's dependencies
 
