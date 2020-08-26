@@ -1,4 +1,5 @@
 from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
 from django.core.management.base import NoArgsCommand
 
 class Command(NoArgsCommand):
