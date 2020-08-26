@@ -83,7 +83,8 @@ def _get_line(table, username, start, limit):
         return [], None
 
     # If we didn't get to the end, return a starting point for the next page
-    if len(results) == limit:
+    #if len(results) == limit:
+    if results.has_more_pages:
         # Find the oldest ID
         oldest_timeuuid = min(row.time for row in results)
 
@@ -264,23 +265,23 @@ def save_user(username, password):
 
     session.execute(add_user_query, (username, password))
 
+#Commented out b/c use of time to create UUID now supported in Cassandra
+#def _timestamp_to_uuid(time_arg):
+#    # TODO: once this is in the python Cassandra driver, use that
+#    microseconds = int(time_arg * 1e6)
+#    timestamp = int(microseconds * 10) + 0x01b21dd213814000L
 
-def _timestamp_to_uuid(time_arg):
-    # TODO: once this is in the python Cassandra driver, use that
-    microseconds = int(time_arg * 1e6)
-    timestamp = int(microseconds * 10) + 0x01b21dd213814000L
+#    time_low = timestamp & 0xffffffffL
+#    time_mid = (timestamp >> 32L) & 0xffffL
+#    time_hi_version = (timestamp >> 48L) & 0x0fffL
 
-    time_low = timestamp & 0xffffffffL
-    time_mid = (timestamp >> 32L) & 0xffffL
-    time_hi_version = (timestamp >> 48L) & 0x0fffL
-
-    rand_bits = random.getrandbits(8 + 8 + 48)
-    clock_seq_low = rand_bits & 0xffL
-    clock_seq_hi_variant = 0b10000000 | (0b00111111 & ((rand_bits & 0xff00L) >> 8))
-    node = (rand_bits & 0xffffffffffff0000L) >> 16
-    return UUID(
-        fields=(time_low, time_mid, time_hi_version, clock_seq_hi_variant, clock_seq_low, node),
-        version=1)
+#    rand_bits = random.getrandbits(8 + 8 + 48)
+#    clock_seq_low = rand_bits & 0xffL
+#    clock_seq_hi_variant = 0b10000000 | (0b00111111 & ((rand_bits & 0xff00L) >> 8))
+#    node = (rand_bits & 0xffffffffffff0000L) >> 16
+#    return UUID(
+#        fields=(time_low, time_mid, time_hi_version, clock_seq_hi_variant, clock_seq_low, node),
+#        version=1)
 
 
 def save_tweet(tweet_id, username, tweet, timestamp=None):
@@ -315,7 +316,8 @@ def save_tweet(tweet_id, username, tweet, timestamp=None):
     if timestamp is None:
         now = uuid1()
     else:
-        now = _timestamp_to_uuid(timestamp)
+        now = datetime.utcnow()
+        #now = _timestamp_to_uuid(timestamp)
 
     # Insert the tweet
     session.execute(tweets_query, (tweet_id, username, tweet,))
